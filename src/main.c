@@ -1,7 +1,6 @@
-#include <stdio.h>
+#include "../include/command.h"
 
-int main(void)
-{
-    printf("Hello, World!\n");
+int main(void) {
+    command();
     return 0;
 }
