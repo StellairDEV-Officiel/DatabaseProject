@@ -6,4 +6,6 @@ set(CMAKE_C_STANDARD 11)
 add_executable(DatabaseProject src/main.c
         src/command.c
         include/command.h
+        src/table.c
+        src/table.h
 )
