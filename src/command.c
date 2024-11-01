@@ -77,6 +77,21 @@ PrepareResult prepare_statement(InputBuffer *input_buffer,
   return PREPARE_UNRECOGNIZED_STATEMENT;
 }
 
+int getMaxId(Record *root)
+{
+  if (root == NULL)
+  {
+    return 0;
+  }
+
+  Record *current = root;
+  while (current->right != NULL) // enregistrement le plus à droite à l'id le plus élevé
+  {
+    current = current->right;
+  }
+  return current->id;
+}
+
 void execute_statement(Statement *statement) {
   switch (statement->type) {
     case (STATEMENT_CREATE):
@@ -96,6 +111,7 @@ void execute_statement(Statement *statement) {
 
 void command(void) {
   printf("Welcome to DatabaseProject, please type .help to get command list !\n");
+  Table *database = NULL;
   InputBuffer *input_buffer = new_input_buffer();
   while (true) {
     print_prompt();

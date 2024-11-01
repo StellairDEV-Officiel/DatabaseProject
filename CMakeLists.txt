@@ -7,5 +7,7 @@ add_executable(DatabaseProject src/main.c
         src/command.c
         include/command.h
         src/table.c
-        src/table.h
+        include/table.h
+        src/record.c
+        include/record.h
 )

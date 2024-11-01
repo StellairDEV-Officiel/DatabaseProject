@@ -25,6 +25,9 @@ typedef struct Table {
     struct Table* next;
 } Table;
 
+// TODO intégrer les tables dans database
+// TODO passer les Tables de liste chainé à arbre binaire comme pour les records
+
 Table* createTable(Table** database, const char* name, int column_count, char columns[][MAX_COLUMN_NAME_LENGTH]);
 Table* findTable(Table* database, const char* name);
 

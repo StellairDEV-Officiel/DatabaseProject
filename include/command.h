@@ -1,6 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 #include <sys/types.h>
+#include "table.h"
 
 typedef enum {
     META_COMMAND_SUCCESS,
@@ -33,6 +34,8 @@ MetaCommandResult do_meta_command(InputBuffer *input_buffer);
 
 PrepareResult prepare_statement(InputBuffer *input_buffer,
                                 Statement *statement);
+
+int getMaxId(Record* root);
 
 void execute_statement(Statement *statement);
 
