@@ -31,7 +31,7 @@ Record* deleteRecord(Record* root, int id) {
 void selectRecords(Record* root, Column schema[], int column_count) {
     if (root != NULL) {
         selectRecords(root->left, schema, column_count);
-        printf("ID: %d", root->id);
+        printf("id: %d", root->id);
         for (int i = 0; i < column_count; i++) {
             printf(", %s: %s", schema[i].name, root->columns[i].value);
         }

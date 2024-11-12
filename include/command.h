@@ -37,7 +37,7 @@ PrepareResult prepare_statement(InputBuffer *input_buffer,
 
 int getMaxId(Record* root);
 
-void execute_statement(Statement *statement);
+void execute_statement(Statement *statement, Table **database, InputBuffer *input_buffer);
 
 void command(void);
 

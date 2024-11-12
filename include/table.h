@@ -1,6 +1,7 @@
 #ifndef TABLE_H
 #define TABLE_H
 
+#define MAX_COLUMNS 10
 #define MAX_COLUMNS_LENGTH 10
 #define MAX_COLUMN_NAME_LENGTH 50
 #define MAX_VALUE_LENGTH 256
