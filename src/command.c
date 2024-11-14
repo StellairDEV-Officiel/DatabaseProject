@@ -18,7 +18,7 @@ InputBuffer *new_input_buffer() {
 void print_prompt() { printf("DatabaseProject> "); }
 
 void read_input(InputBuffer *input_buffer) {
-  ssize_t bytes_read = getline(&(input_buffer->buffer), &(input_buffer->buffer_length), stdin);
+  const ssize_t bytes_read = getline(&(input_buffer->buffer), &(input_buffer->buffer_length), stdin);
 
   if (bytes_read <= 0) {
     printf("Error reading input\n");
@@ -56,7 +56,7 @@ MetaCommandResult do_meta_command(InputBuffer *input_buffer) {
   return META_COMMAND_UNRECOGNIZED_COMMAND;
 }
 
-PrepareResult prepare_statement(InputBuffer *input_buffer,
+PrepareResult prepare_statement(const InputBuffer *input_buffer,
                                 Statement *statement) {
   if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
     statement->type = STATEMENT_INSERT;
@@ -78,14 +78,14 @@ PrepareResult prepare_statement(InputBuffer *input_buffer,
   return PREPARE_UNRECOGNIZED_STATEMENT;
 }
 
-int getMaxId(Record *root)
+int getMaxId(const Record *root)
 {
   if (root == NULL)
   {
     return 0;
   }
 
-  Record *current = root;
+  const Record *current = root;
   while (current->right != NULL) // enregistrement le plus à droite à l'id le plus élevé
   {
     current = current->right;
@@ -93,8 +93,10 @@ int getMaxId(Record *root)
   return current->id;
 }
 
-void execute_statement(Statement *statement, Table **database, InputBuffer *input_buffer) {
+void execute_statement(const Statement *statement, Table **database, InputBuffer *input_buffer) {
   char tableName[MAX_COLUMN_NAME_LENGTH];
+  char columns[MAX_COLUMNS][MAX_COLUMN_NAME_LENGTH];
+  int columnCount = 0;
   Table *table;
 
   printf("Entrez le nom de la table>");
@@ -103,9 +105,6 @@ void execute_statement(Statement *statement, Table **database, InputBuffer *inpu
 
   switch (statement->type) {
     case (STATEMENT_CREATE):
-      char columns[MAX_COLUMNS][MAX_COLUMN_NAME_LENGTH];
-      int columnCount = 0;
-
       while (1)
       {
         printf("Entrez le nom de la colonne numéro %d (ou appuyez sur Entrée pour terminer)>", columnCount + 1);
@@ -129,13 +128,12 @@ void execute_statement(Statement *statement, Table **database, InputBuffer *inpu
       printf("Table '%s' créée avec %d colonnes.\n", tableName, columnCount);
       break;
     case (STATEMENT_INSERT):
-      char values[MAX_COLUMNS][MAX_VALUE_LENGTH];
-
       table = findTable(*database, tableName);
 
       if (table != NULL)
       {
-        int id = getMaxId(table->records) + 1;
+        char values[MAX_COLUMNS][MAX_VALUE_LENGTH];
+        const int id = getMaxId(table->records) + 1;
         int valueCount = 0;
 
         printf("Entrez les valeurs pour chaque colonne (appuyez sur Entrée sans rien écrire pour terminer) :\n");

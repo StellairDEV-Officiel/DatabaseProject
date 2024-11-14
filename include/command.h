@@ -32,12 +32,12 @@ void close_input_buffer(InputBuffer *input_buffer);
 
 MetaCommandResult do_meta_command(InputBuffer *input_buffer);
 
-PrepareResult prepare_statement(InputBuffer *input_buffer,
+PrepareResult prepare_statement(const InputBuffer *input_buffer,
                                 Statement *statement);
 
-int getMaxId(Record* root);
+int getMaxId(const Record* root);
 
-void execute_statement(Statement *statement, Table **database, InputBuffer *input_buffer);
+void execute_statement(const Statement *statement, Table **database, InputBuffer *input_buffer);
 
 void command(void);
 

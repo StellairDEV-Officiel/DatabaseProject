@@ -58,3 +58,6 @@ dkms.conf
 
 # Cmake
 cmake-build-debug
+
+# Mac
+.DS_Store
