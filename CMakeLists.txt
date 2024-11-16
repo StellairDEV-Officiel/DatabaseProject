@@ -10,4 +10,8 @@ add_executable(DatabaseProject src/main.c
         include/table.h
         src/record.c
         include/record.h
+        src/records_btree.c
+        include/records_btree.h
+        src/table_btree.c
+        include/table_btree.h
 )
