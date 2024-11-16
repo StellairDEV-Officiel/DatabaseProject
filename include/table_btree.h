@@ -9,8 +9,13 @@ typedef struct TableNode {
     struct TableNode *right;
 } TableNode;
 
-TableNode* insertTableNode(TableNode* root, char* name, Table* table);
-TableNode* searchTableNode(TableNode* root, char* name);
+typedef struct StackTableNode {
+    TableNode* tableNode;
+    struct StackNode* next;
+} StackTableNode;
+
+TableNode* insertTableNode(TableNode* root, const char* name, Table* table);
+TableNode* searchTableNode(TableNode* root, const char* name);
 TableNode* deleteTableNode(TableNode* root, char* name);
 TableNode* findMinTableNode(TableNode* root);
 void viewKeyTableNode(TableNode* root);

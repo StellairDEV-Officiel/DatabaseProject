@@ -103,12 +103,12 @@ Node* deleteRecordNode(Node* root, int key) {
     }
     // deux enfants
     else {
-        const Node* minNode = findMin(current->right);
+        const Node* minNode = findMinRecordNode(current->right);
         const int minKey = minNode->key;
         const long minOffset = minNode->offset;
         current->key = minKey;
         current->offset = minOffset;
-        current->right = deleteNode(current->right, minKey);
+        current->right = deleteRecordNode(current->right, minKey);
     }
 
     return root;
