@@ -63,7 +63,7 @@ TableNode* findMinTableNode(TableNode* root) {
     return current;
 }
 
-TableNode* deleteTableNode(TableNode* root, char* name) {
+TableNode* deleteTableNode(TableNode* root, const char* name) {
     TableNode* parent = NULL;
     TableNode* current = root;
 
@@ -174,7 +174,7 @@ void freeTableTree(TableNode* root) {
         return;
 
     StackTableNode* stack = NULL;
-    TableNode* lastVisited = NULL;
+    const TableNode* lastVisited = NULL;
     TableNode* current = root;
 
     while (current != NULL || stack != NULL) {

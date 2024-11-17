@@ -58,7 +58,7 @@ Node* findMinRecordNode(Node* root) {
 }
 
 
-Node* deleteRecordNode(Node* root, int key) {
+Node* deleteRecordNode(Node* root, const int key) {
     Node* parent = NULL;
     Node* current = root;
 

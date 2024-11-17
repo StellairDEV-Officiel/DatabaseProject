@@ -1,6 +1,7 @@
 // https://github.com/Mbahal/class_db/blob/main/src/repl.c
 #include "../include/command.h"
-#include "../include/record.h"
+#include "../include/storage.h"
+#include "../include/database.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,9 +36,11 @@ void close_input_buffer(InputBuffer *input_buffer) {
   free(input_buffer);
 }
 
-MetaCommandResult do_meta_command(InputBuffer *input_buffer) {
+MetaCommandResult do_meta_command(InputBuffer *input_buffer, TableNode* database) {
   if (strcmp(input_buffer->buffer, ".exit") == 0) {
     close_input_buffer(input_buffer);
+    saveAllTables(database);
+    freeTableTree(database);
     exit(EXIT_SUCCESS);
   }
   if (strcmp(input_buffer->buffer, ".help") == 0) {
@@ -78,133 +81,47 @@ PrepareResult prepare_statement(const InputBuffer *input_buffer,
   return PREPARE_UNRECOGNIZED_STATEMENT;
 }
 
-int getMaxId(const Record *root)
-{
-  if (root == NULL)
-  {
-    return 0;
-  }
-
-  const Record *current = root;
-  while (current->right != NULL) // enregistrement le plus à droite à l'id le plus élevé
-  {
-    current = current->right;
-  }
-  return current->id;
-}
-
-void execute_statement(const Statement *statement, Table **database, InputBuffer *input_buffer) {
-  char tableName[MAX_COLUMN_NAME_LENGTH];
-  char columns[MAX_COLUMNS][MAX_COLUMN_NAME_LENGTH];
-  int columnCount = 0;
-  Table *table;
+void execute_statement(const Statement *statement, TableNode** database, InputBuffer *input_buffer) {
+  char tableName[MAX_TABLE_NAME_LENGTH];
+  int key;
 
   printf("Entrez le nom de la table>");
   read_input(input_buffer);
-  strncpy(tableName, input_buffer->buffer, MAX_COLUMN_NAME_LENGTH);
+  strncpy(tableName, input_buffer->buffer, MAX_TABLE_NAME_LENGTH);
 
   switch (statement->type) {
     case (STATEMENT_CREATE):
-      while (1)
-      {
-        printf("Entrez le nom de la colonne numéro %d (ou appuyez sur Entrée pour terminer)>", columnCount + 1);
-        read_input(input_buffer);
-        strncpy(columns[columnCount], input_buffer->buffer, MAX_COLUMN_NAME_LENGTH);
-
-        if (strncmp(columns[columnCount], "", 1) == 0)
-        {
-          printf("Fin de la création de la table.\n");
-          break;
-        }
-        columnCount++;
-        if (columnCount >= MAX_COLUMNS)
-        {
-          printf("Nombre maximal de colonnes atteint.\n");
-          break;
-        }
-      }
-
-      createTable(database, tableName, columnCount, columns);
-      printf("Table '%s' créée avec %d colonnes.\n", tableName, columnCount);
+      createTable(database, tableName, input_buffer);
       break;
     case (STATEMENT_INSERT):
-      table = findTable(*database, tableName);
-
-      if (table != NULL)
-      {
-        char values[MAX_COLUMNS][MAX_VALUE_LENGTH];
-        const int id = getMaxId(table->records) + 1;
-        int valueCount = 0;
-
-        printf("Entrez les valeurs pour chaque colonne (appuyez sur Entrée sans rien écrire pour terminer) :\n");
-        for (int i = 0; i < table->column_count; i++)
-        {
-          printf("%s: ", table->schema[i].name);
-          read_input(input_buffer);
-          strncpy(values[i], input_buffer->buffer, MAX_VALUE_LENGTH);
-
-          if (strncmp(values[i], "", 1) == 0)
-          {
-            printf("Fin de l'insertion des données de la table.\n");
-            break;
-          }
-          valueCount++;
-        }
-
-        table->records = insertRecord(table->records, id, valueCount, values);
-        printf("Enregistrement inséré avec l'ID %d.\n", id);
-      }
-      else
-      {
-        printf("Erreur : Table '%s' non trouvée.\n", tableName);
-      }
+      insertRecord(*database, tableName, input_buffer);
       break;
     case (STATEMENT_SELECT):
-      table = findTable(*database, tableName);
-
-      if (table != NULL)
-      {
-        printf("id   |");
-        for (int i = 0; i < table->column_count; i++)
-        {
-          printf(" %-10s |", table->schema[i].name);
-        }
-        printf("\n+----+");
-        for (int i = 0; i < table->column_count; i++)
-        {
-          printf("------------+");
-        }
-        printf("\n");
-
-        selectRecords(table->records, table->schema, table->column_count);
-
-        printf("+----+");
-        for (int i = 0; i < table->column_count; i++)
-        {
-          printf("------------+");
-        }
-        printf("\n");
-      }
-      else
-      {
-        printf("Erreur : Table '%s' non trouvée.\n", tableName);
-      }
+      printf("Entrez la clé à rechercher: ");
+      scanf("%d", &key);
+      getchar();
+      selectRecord(*database, tableName, key);
       break;
     case (STATEMENT_DELETE):
-      //TODO implement the command here
+      printf("Entrez la clé à supprimer: ");
+      scanf("%d", &key);
+      getchar(); //TODO remplacer scanf car pas adapté, mais j'ai un soucis pour gérer les int donc pour le moment je reste sur scanf pour les int
+      deleteRecord(database, tableName, key);
       break;
   }
 }
 
 void command(void) {
   printf("Welcome to DatabaseProject, please type .help to get command list !\n");
-  Table *database = NULL;
+  TableNode* database = NULL;
+  int tableCount = 0;
+  loadAllTables(&database, &tableCount);
   InputBuffer *input_buffer = new_input_buffer();
   while (true) {
     print_prompt();
     read_input(input_buffer);
     if (input_buffer->buffer[0] == '.') {
-      switch (do_meta_command(input_buffer)) {
+      switch (do_meta_command(input_buffer, database)) {
         case (META_COMMAND_SUCCESS):
           continue;
         case (META_COMMAND_UNRECOGNIZED_COMMAND):
