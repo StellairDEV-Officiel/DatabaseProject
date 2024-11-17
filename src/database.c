@@ -13,7 +13,10 @@ void createTable(TableNode** root, char* tableName, InputBuffer* input_buffer) {
 
     newTable->schema.columns = (Column*)malloc(MAX_COLUMNS * sizeof(Column));
 
-    int columnCount = 0;
+    strncpy(newTable->schema.columns[0].name, "id", MAX_COLUMN_NAME_LENGTH);
+    newTable->schema.columns[0].type = TYPE_INT;
+
+    int columnCount = 1;
     while (1) {
         printf("Entrez le nom de la colonne numéro %d (ou appuyez sur Entrée pour terminer) >", columnCount + 1);
         read_input(input_buffer);
