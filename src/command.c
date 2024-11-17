@@ -94,7 +94,7 @@ void execute_statement(const Statement *statement, TableNode** database, InputBu
       createTable(database, tableName, input_buffer);
       break;
     case (STATEMENT_INSERT):
-      insertRecord(*database, tableName, input_buffer);
+      insertRecord(*database, tableName);
       break;
     case (STATEMENT_SELECT):
       printf("Entrez la clé à rechercher: ");

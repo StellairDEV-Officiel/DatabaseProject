@@ -62,7 +62,7 @@ void createTable(TableNode** root, char* tableName, InputBuffer* input_buffer) {
     }
 }
 
-void insertRecord(TableNode* root, char* tableName, InputBuffer* input_buffer) {
+void insertRecord(TableNode* root, char* tableName) {
     if (root == NULL) {
         printf("Aucune table existante.\n");
         return;

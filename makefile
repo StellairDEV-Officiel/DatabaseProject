@@ -11,7 +11,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -std=c11 -I$(INCLUDE_DIR)
 
 # Liste des fichiers sources
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/command.c $(SRC_DIR)/table.c $(SRC_DIR)/record.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/command.c $(SRC_DIR)/database.c $(SRC_DIR)/records_btree.c $(SRC_DIR)/table_btree.c $(SRC_DIR)/storage.c
 
 # Fichiers objets générés dans le dossier build
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))

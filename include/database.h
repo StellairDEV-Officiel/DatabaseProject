@@ -17,7 +17,7 @@ typedef struct Record {
 } Record;
 
 void createTable(TableNode** root, char* tableName, InputBuffer* input_buffer);
-void insertRecord(TableNode* root, char* tableName, InputBuffer* input_buffer);
+void insertRecord(TableNode* root, char* tableName);
 void selectRecord(TableNode* root, char* tableName, int key);
 void deleteRecord(TableNode** root, char* tableName, int key);
 
